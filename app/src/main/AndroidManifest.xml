@@ -15,7 +15,7 @@
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
 
         <meta-data android:name="distractionOptimized" android:value="true" />
-        <meta-data android:name="androidx.car.app.minCarApiLevel" android:value="1" />
+        <meta-data android:name="androidx.car.app.minCarApiLevel" android:value="7" />
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />

@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace 'com.brianevanmiller.ampauto'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.brianevanmiller.ampauto'
         minSdk 29
-        targetSdk 35
+        targetSdk 36
         versionCode Integer.parseInt(System.getenv('VERSION_CODE') ?: '1')
         versionName System.getenv('VERSION_NAME') ?: '0.1.0'
     }
@@ -29,5 +29,5 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.car.app:app:1.4.0'
+    implementation 'androidx.car.app:app:1.7.0'
 }
