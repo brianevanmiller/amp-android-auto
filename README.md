@@ -1,7 +1,9 @@
 # Amp for Android Auto (prototype)
 
 A single-Activity WebView wrapper around [ampcode.com](https://ampcode.com) that
-shows up as an app on the Android Auto screen. **Use only while parked.**
+shows up as an app on the Android Auto screen. If you find yourself often parked and waiting for more than three minutes at a time,
+this app is for you. I use this while parked and waiting for kids to finish school or
+wrap up after school events.
 
 ## Install
 
@@ -13,7 +15,9 @@ shows up as an app on the Android Auto screen. **Use only while parked.**
    preferences → Android Auto → tap **Version** ~10 times → ⋮ → **Developer settings**
    → turn on **Unknown sources**.
 4. Android Auto settings → **Customize launcher** → make sure **Amp** is checked.
-5. Connect to the car; tap **Amp** in the launcher.
+5. Connect to the car; tap **Amp** in the launcher. Amp only works in Park, by design:
+   Android Auto enforces this for apps like it, and Amp stops working as soon as the car
+   shifts out of Park.
 
 Requires Android 15+ on the phone for Android Auto to host the Activity.
 
