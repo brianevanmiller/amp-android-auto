@@ -20,16 +20,19 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.13
-      - name: Build release APK
+      - name: Build release APKs
         env:
           VERSION_CODE: ${{ github.run_number }}
           VERSION_NAME: 0.1.${{ github.run_number }}
         run: |
-          gradle :app:assembleRelease
+          gradle :app:assembleRelease :puck-android-auto:assembleRelease
           cp app/build/outputs/apk/release/app-release.apk amp-auto.apk
+          cp puck-android-auto/build/outputs/apk/release/puck-android-auto-release.apk puck-auto.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v0.1.${{ github.run_number }}
-          name: Amp for Android Auto 0.1.${{ github.run_number }}
-          files: amp-auto.apk
+          name: Amp + Puck for Android Auto 0.1.${{ github.run_number }}
+          files: |
+            amp-auto.apk
+            puck-auto.apk
           make_latest: true

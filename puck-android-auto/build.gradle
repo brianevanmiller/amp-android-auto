@@ -1,0 +1,33 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.brianevanmiller.puck'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.brianevanmiller.puck'
+        minSdk 29
+        targetSdk 36
+        versionCode Integer.parseInt(System.getenv('VERSION_CODE') ?: '1')
+        versionName System.getenv('VERSION_NAME') ?: '0.1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // Prototype: sign with the debug key. Swap in a real key via secrets later.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.car.app:app:1.7.0'
+}
