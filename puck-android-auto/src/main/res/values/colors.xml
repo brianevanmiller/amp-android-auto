@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="icon_background">#252F2B</color>
-    <color name="icon_puck">#F3EEDF</color>
+    <color name="icon_background">#F9FDF6</color>
 </resources>
