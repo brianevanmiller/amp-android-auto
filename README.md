@@ -68,8 +68,12 @@ keeps working when the car is in Drive, unlike Amp.
    Puck is a separate app from Amp, so you can have both.
 2. Open **Puck** on the phone. Allow **Microphone**, **Nearby devices** (for car audio
    over Bluetooth) and **Notifications** when asked.
-3. Sign in to Amp on the page that opens. Puck has its own login, separate from the Amp
-   app. When you see the ampcode.com/car page you're set.
+3. Sign in. Signed out, ampcode.com/car shows a QR code meant for another, signed-in
+   device to scan. Your phone can't scan its own screen, so tap **Sign in with QR** at the
+   bottom of Puck: it reads the QR code off the screen and opens the link in Chrome, which
+   should already be signed in to Amp (sign in there first if not). Approve it, come back
+   to Puck, and the page reloads signed in. **Reload** is there if it doesn't. You only
+   have to do this once.
 4. Optional: tap the call button on the phone once to check that Puck answers.
 5. Android Auto developer mode and **Unknown sources** must be on (see Amp step 3).
 6. Android Auto settings → **Customize launcher** → make sure **Puck** is checked.
@@ -94,7 +98,8 @@ the phone notification. Do the one-time setup above before you drive.
   its call button. A microphone foreground service keeps the mic open while the phone is
   in your pocket, and sends the call audio to the car's Bluetooth hands-free link.
 - **If something's wrong:** the car screen shows the error, for example when you're not
-  signed in or the mic isn't allowed.
+  signed in ("Sign in first…") or the mic isn't allowed. If Puck doesn't pick up within
+  about 25 seconds, the car screen says so rather than sitting on "Connecting…".
 
 Puck finds the page's call button by its label ("Call", "Talk", "Start"…). If
 ampcode.com/car changes its layout and Puck can't find the button, the car screen will

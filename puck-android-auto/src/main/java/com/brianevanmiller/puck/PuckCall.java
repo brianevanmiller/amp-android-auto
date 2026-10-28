@@ -56,7 +56,17 @@ final class PuckCall {
     private static final String HANG_UP_JS = String.format(FIND_JS,
             "/\\b(end|hang|stop|leave|disconnect)\\b/i, null, false");
 
+    // Signed out, ampcode.com/car shows a QR sign-in screen instead of the call button.
+    private static final String SIGNED_OUT_JS =
+            "(function() {"
+            + "  var t = (document.body && document.body.innerText) || '';"
+            + "  return /scan (the |this )?(qr|code)|qr code|sign in|log in/i.test(t) ? 'signedout' : 'ok';"
+            + "})()";
+    static final String SIGN_IN_MESSAGE = "Sign in first: open Puck on your phone and tap Sign in with QR.";
+
     private static final int CLICK_ATTEMPTS = 20;
+    // Give up on "Connecting…" if the page never opens the mic.
+    private static final long CONNECT_TIMEOUT_MS = 25000;
     private static final long CLICK_RETRY_MS = 500;
 
     private static PuckCall instance;
@@ -77,6 +87,7 @@ final class PuckCall {
     private boolean error;
     private boolean pageReady;
     private boolean callPending;
+    private int callAttempt;
 
     @SuppressLint("SetJavaScriptEnabled")
     private PuckCall(Context appContext) {
@@ -100,7 +111,7 @@ final class PuckCall {
             public void onPageFinished(WebView view, String url) {
                 pageReady = isCarPage(url);
                 if (!pageReady) {
-                    if (callPending) fail("Sign in to Amp in the Puck app on your phone first.");
+                    if (callPending) fail(SIGN_IN_MESSAGE);
                     return;
                 }
                 if (callPending) {
@@ -171,6 +182,12 @@ final class PuckCall {
     void call() {
         if (state != State.IDLE) return;
         setState(State.CALLING, "Calling Puck…");
+        int attempt = ++callAttempt;
+        handler.postDelayed(() -> {
+            if (attempt == callAttempt && state == State.CALLING) {
+                fail("Puck didn't pick up. Open Puck on your phone and check you're signed in.");
+            }
+        }, CONNECT_TIMEOUT_MS);
         if (pageReady) {
             clickCall(CLICK_ATTEMPTS);
         } else {
@@ -183,6 +200,7 @@ final class PuckCall {
     void hangUp() {
         if (state == State.IDLE) return;
         callPending = false;
+        callAttempt++;
         webView.evaluateJavascript(HANG_UP_JS, result -> {
             if (!"\"clicked\"".equals(result)) webView.loadUrl(CAR_URL);
         });
@@ -192,6 +210,7 @@ final class PuckCall {
 
     void fail(String message) {
         callPending = false;
+        callAttempt++;
         PuckCallService.stop(appContext);
         setState(State.IDLE, message, true);
     }
@@ -223,8 +242,24 @@ final class PuckCall {
         webView.layout(0, 0, w, h);
     }
 
+    /** Reloads ampcode.com/car, e.g. after signing in elsewhere. */
+    void reload() {
+        webView.loadUrl(CAR_URL);
+    }
+
     private void clickCall(int attemptsLeft) {
         if (state != State.CALLING) return;
+        webView.evaluateJavascript(SIGNED_OUT_JS, signedOut -> {
+            if (state != State.CALLING) return;
+            if ("\"signedout\"".equals(signedOut)) {
+                fail(SIGN_IN_MESSAGE);
+            } else {
+                pressCall(attemptsLeft);
+            }
+        });
+    }
+
+    private void pressCall(int attemptsLeft) {
         webView.evaluateJavascript(CALL_JS, result -> {
             if (state != State.CALLING) return;
             if ("\"clicked\"".equals(result)) {
