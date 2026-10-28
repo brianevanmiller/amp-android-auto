@@ -27,7 +27,3 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 }
-
-dependencies {
-    implementation 'androidx.car.app:app:1.7.0'
-}

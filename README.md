@@ -5,7 +5,7 @@ Two sideloaded Android Auto apps in one repo:
 | App | What it is | Works while driving? |
 | --- | --- | --- |
 | **Amp** (`app/`) | Full [ampcode.com](https://ampcode.com) in a browser on the car screen | No, Park only |
-| **Puck** (`puck-android-auto/`) | One big button that calls Puck, Amp's voice agent, via [ampcode.com/car](https://ampcode.com/car) | Yes |
+| **Puck** (`puck-android-auto/`) | A button that calls Puck, Amp's voice agent, via [ampcode.com/car](https://ampcode.com/car) | Yes |
 
 ## Amp
 
@@ -41,15 +41,16 @@ Play Store–distributed apps can't do this; it relies on Android Auto's
 ## Puck
 
 Puck is Amp's meta agent: you talk to it and it kicks off and manages your Amp threads.
-The Puck app puts a single **Call Puck** button on the car screen. Tap it, talk, and tap
-**Hang up** when you're done. It's built from Android Auto's standard templates, so,
-unlike Amp, it keeps working when the car is in Drive.
+The Puck app puts a **Call Puck** button on the car screen. Tap it, talk, and pause or
+stop when you're done to hang up. Android Auto lists it as a media app, which means it
+keeps working when the car is in Drive, unlike Amp.
 
 ### Install Puck
 
 1. On your phone, download the APK:
    https://github.com/brianevanmiller/amp-android-auto/releases/latest/download/puck-auto.apk
-   and install it. Puck is a separate app from Amp, so you can have both.
+   and install it. Puck is a separate app from Amp, so you can have both. If the download
+   sticks at the last percent, check **Files → Downloads**; it has usually finished.
 2. Open **Puck** on the phone. Allow **Microphone**, **Nearby devices** (for car audio
    over Bluetooth) and **Notifications** when asked.
 3. Sign in to Amp on the page that opens. Puck has its own login, separate from the Amp
@@ -60,21 +61,25 @@ unlike Amp, it keeps working when the car is in Drive.
 
 ### Use Puck
 
-Connect to the car, open **Puck** from the launcher, and tap **Call Puck**. The voice
-comes through the car speakers and you talk through the car's microphone. Tap
-**Hang up** on the car screen, or in the phone notification, to end the call. Do the
-one-time setup above before you drive.
+Connect to the car and open **Puck** from the launcher. Tap **Call Puck**, or say
+"Hey Google, play Puck". The voice comes through the car speakers and you talk through
+the car's microphone. To hang up, tap pause or stop on the car screen, or **Hang up** in
+the phone notification. Do the one-time setup above before you drive.
 
 ### How Puck works
 
-- **Car screen:** a Car App Library `MessageTemplate` (category `IOT`), served by a
-  `CarAppService`. Android Auto draws the template itself, which is why it stays usable
-  while driving.
+- **Car screen:** a standard media app (a `MediaBrowserService` plus a `MediaSession`).
+  Play starts the call; pause or stop ends it; the status shows where the artist name
+  would be. Android Auto draws media screens itself, which is why they stay usable while
+  driving.
+- **Why media and not a Car App Library template app:** recent Android Auto versions
+  hide sideloaded template apps even with Unknown sources on. Media apps are still
+  allowed ([details](https://github.com/AndreyPavlenko/Fermata/issues/846)).
 - **Phone:** the call runs in an off-screen WebView that loads ampcode.com/car and presses
   its call button. A microphone foreground service keeps the mic open while the phone is
   in your pocket, and sends the call audio to the car's Bluetooth hands-free link.
-- **If something's wrong:** the car screen shows a status line, for example when you're
-  not signed in or the mic isn't allowed.
+- **If something's wrong:** the car screen shows the error, for example when you're not
+  signed in or the mic isn't allowed.
 
 Puck finds the page's call button by its label ("Call", "Talk", "Start"…). If
 ampcode.com/car changes its layout and Puck can't find the button, the car screen will

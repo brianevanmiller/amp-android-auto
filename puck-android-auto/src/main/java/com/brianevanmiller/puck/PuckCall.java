@@ -73,7 +73,8 @@ final class PuckCall {
     private final List<Listener> listeners = new ArrayList<>();
 
     private State state = State.IDLE;
-    private String status = "Ready. Tap Call to talk to Puck.";
+    private String status = "Ready. Tap Call Puck to start talking.";
+    private boolean error;
     private boolean pageReady;
     private boolean callPending;
 
@@ -153,6 +154,11 @@ final class PuckCall {
         return status;
     }
 
+    /** Whether the status explains why the last call couldn't start. */
+    boolean isError() {
+        return error;
+    }
+
     void addListener(Listener l) {
         listeners.add(l);
     }
@@ -175,18 +181,19 @@ final class PuckCall {
 
     /** Ends the call via the page's hang-up button, or by reloading the page if there isn't one. */
     void hangUp() {
+        if (state == State.IDLE) return;
         callPending = false;
         webView.evaluateJavascript(HANG_UP_JS, result -> {
             if (!"\"clicked\"".equals(result)) webView.loadUrl(CAR_URL);
         });
         PuckCallService.stop(appContext);
-        setState(State.IDLE, "Call ended. Tap Call to talk to Puck again.");
+        setState(State.IDLE, "Call ended. Tap Call Puck to talk again.");
     }
 
     void fail(String message) {
         callPending = false;
         PuckCallService.stop(appContext);
-        setState(State.IDLE, message);
+        setState(State.IDLE, message, true);
     }
 
     /** Shows the WebView in the phone activity. */
@@ -237,8 +244,13 @@ final class PuckCall {
     }
 
     private void setState(State state, String status) {
+        setState(state, status, false);
+    }
+
+    private void setState(State state, String status, boolean error) {
         this.state = state;
         this.status = status;
+        this.error = error;
         for (Listener l : new ArrayList<>(listeners)) l.onPuckCallChanged();
     }
 }
