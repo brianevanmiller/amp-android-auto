@@ -7,6 +7,23 @@ Two sideloaded Android Auto apps in one repo:
 | **Amp** (`app/`) | Full [ampcode.com](https://ampcode.com) in a browser on the car screen | No, Park only |
 | **Puck** (`puck-android-auto/`) | A button that calls Puck, Amp's voice agent, via [ampcode.com/car](https://ampcode.com/car) | Yes |
 
+## Installing an APK on your phone
+
+Both apps install the same way. What works:
+
+1. **Copy** the APK link and **paste it into Chrome's address bar**. Don't tap the link in
+   another app (GitHub, Claude, email): those open a mini-browser whose download tends to
+   hang at the last percent.
+2. When the download finishes, open the **Files** app → **Downloads** and tap the `.apk`.
+3. If Android blocks it:
+   - *"Your phone is not allowed to install unknown apps"*: tap **Settings** in the popup
+     and turn on **Allow from this source** (or Settings → Apps → Special app access →
+     **Install unknown apps** → Files / Chrome).
+   - *Play Protect "Blocked" or "Unsafe app"*: tap **More details** → **Install anyway**.
+     The builds are signed with a throwaway key, not a Play Store one.
+   - *"App not installed" / "package conflicts"*: an older build is installed. Uninstall it
+     first (each build is signed with a different key; see [Build](#build)).
+
 ## Amp
 
 A single-Activity WebView wrapper around [ampcode.com](https://ampcode.com) that
@@ -16,9 +33,8 @@ wrap up after school events.
 
 ### Install Amp
 
-1. On your phone, download the APK:
+1. Install the APK (see [Installing an APK](#installing-an-apk-on-your-phone)):
    https://github.com/brianevanmiller/amp-android-auto/releases/latest/download/amp-auto.apk
-   and allow your browser to install unknown apps.
 2. Open **Amp** on the phone once and sign in. The session (cookies) is shared with the car.
 3. Enable Android Auto developer mode: Settings → Connected devices → Connection
    preferences → Android Auto → tap **Version** ~10 times → ⋮ → **Developer settings**
@@ -47,10 +63,9 @@ keeps working when the car is in Drive, unlike Amp.
 
 ### Install Puck
 
-1. On your phone, download the APK:
+1. Install the APK (see [Installing an APK](#installing-an-apk-on-your-phone)):
    https://github.com/brianevanmiller/amp-android-auto/releases/latest/download/puck-auto.apk
-   and install it. Puck is a separate app from Amp, so you can have both. If the download
-   sticks at the last percent, check **Files → Downloads**; it has usually finished.
+   Puck is a separate app from Amp, so you can have both.
 2. Open **Puck** on the phone. Allow **Microphone**, **Nearby devices** (for car audio
    over Bluetooth) and **Notifications** when asked.
 3. Sign in to Amp on the page that opens. Puck has its own login, separate from the Amp
